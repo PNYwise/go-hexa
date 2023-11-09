@@ -21,9 +21,9 @@ func ConnectDb() {
 
 	conf := New()
 	var (
-		dbHost = conf.GetString("database.host")
-		dbPort = conf.GetInt("database.port")
-		dbName = conf.GetString("database.name")
+		dbHost     = conf.GetString("database.host")
+		dbPort     = conf.GetInt("database.port")
+		dbName     = conf.GetString("database.name")
 		dbUsername = conf.GetString("database.username")
 		dbPassword = conf.GetString("database.password")
 	)
@@ -49,4 +49,12 @@ func ConnectDb() {
 	DB = Dbinstance{
 		Db: db,
 	}
+}
+
+func CloseDb() error {
+	db, err := DB.Db.DB()
+	if err != nil {
+		return err
+	}
+	return db.Close()
 }

@@ -7,21 +7,20 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
+	"gorm.io/gorm"
 )
 
-
-
-func Bootstrap(app *fiber.App, conf *viper.Viper)  {
-	userInit(app)
+func Bootstrap(app *fiber.App, db *gorm.DB, conf *viper.Viper) {
+	userInit(app, db)
 }
 
 /*
 *users init
-*/
-func userInit(app *fiber.App)  {
-	userRepository := repositories.NewUserRepository()
+ */
+func userInit(app *fiber.App, db *gorm.DB) {
+	userRepository := repositories.NewUserRepository(db)
 	userservice := services.NewUserServie(userRepository)
-	userHandler := handlers.NewUserHandler(userservice,app)
+	userHandler := handlers.NewUserHandler(userservice, app)
 
 	userHandler.InitRouter()
 }
