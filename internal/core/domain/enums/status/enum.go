@@ -1,7 +1,8 @@
 package status
 
 type Enum string
+
 const (
-	ACTIVE Enum = "active"
+	ACTIVE   Enum = "active"
 	INACTIVE Enum = "inactive"
 )

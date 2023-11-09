@@ -1,0 +1,52 @@
+package configs
+
+import (
+	"fmt"
+	"go-hexa/internal/core/domain/entities"
+	"log"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+)
+
+type Dbinstance struct {
+	Db *gorm.DB
+}
+
+var DB Dbinstance
+
+// connectDb
+func ConnectDb() {
+
+	conf := New()
+	var (
+		dbHost = conf.GetString("database.host")
+		dbPort = conf.GetInt("database.port")
+		dbName = conf.GetString("database.name")
+		dbUsername = conf.GetString("database.username")
+		dbPassword = conf.GetString("database.password")
+	)
+
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password='%s' dbname=%s port=%d sslmode=disable TimeZone=UTC",
+		dbHost, dbUsername, dbPassword, dbName, dbPort,
+	)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
+
+	if err != nil {
+		log.Fatal("Failed to connect to database. \n", err)
+	}
+
+	log.Println("connected")
+	db.Logger = logger.Default.LogMode(logger.Info)
+	log.Println("running migrations")
+	db.AutoMigrate(&entities.UserEntity{})
+
+	DB = Dbinstance{
+		Db: db,
+	}
+}
