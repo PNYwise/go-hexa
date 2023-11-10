@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func New() *viper.Viper {	
+func New() *viper.Viper {
 	confName := os.Getenv("APP_ENV")
 	if confName == "" {
 		confName = "development"
@@ -19,6 +19,10 @@ func New() *viper.Viper {
 	err := conf.ReadInConfig()
 	if err != nil {
 		panic(err)
-	} 
+	}
 	return conf
+}
+
+func App() {
+
 }

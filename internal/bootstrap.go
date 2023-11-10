@@ -2,8 +2,8 @@ package internal
 
 import (
 	"go-hexa/internal/core/services"
-	"go-hexa/internal/handlers"
 	"go-hexa/internal/repositories"
+	"go-hexa/internal/rest/handlers"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
