@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"go-hexa/internal/core/domain/models/requests"
 	"go-hexa/internal/core/domain/services"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,8 +29,14 @@ func (u *userHandler) InitRouter() {
 }
 
 func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
-	users := u.userServie.FindAll()
+	paginationRequest := &requests.PaginationRequest{}
+	if err := ctx.QueryParser(paginationRequest); err != nil {
+		panic(err)
+	}
+	fmt.Println(paginationRequest.Page, paginationRequest.Take, paginationRequest.Skip())
+	users, pagination := u.userServie.FindAll(paginationRequest)
+	response := NewApiResponseList(200, users, pagination)
 	fmt.Printf("Users: %+v\n", users)
 
-	return ctx.JSON(users)
+	return ctx.JSON(response)
 }
