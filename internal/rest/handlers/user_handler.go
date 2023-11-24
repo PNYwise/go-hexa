@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"go-hexa/internal/core/domain/models/requests"
 	"go-hexa/internal/core/domain/services"
 
@@ -26,17 +25,31 @@ func NewUserHandler(
 func (u *userHandler) InitRouter() {
 	api := u.app.Group("users")
 	api.Get("list", u.FindAll)
+	api.Get("detail/:id", u.FindOne)
 }
 
 func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
 	paginationRequest := &requests.PaginationRequest{}
 	if err := ctx.QueryParser(paginationRequest); err != nil {
-		panic(err)
+		return err
 	}
-	fmt.Println(paginationRequest.Page, paginationRequest.Take, paginationRequest.Skip())
 	users, pagination := u.userServie.FindAll(paginationRequest)
 	response := NewApiResponseList(200, users, pagination)
-	fmt.Printf("Users: %+v\n", users)
 
+	return ctx.JSON(response)
+}
+
+func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
+	param := struct {
+		ID uint `params:"id"`
+	}{}
+	if err := ctx.ParamsParser(&param); err != nil {
+		return err
+	}
+	users, err := u.userServie.FindOne(param.ID)
+	if err != nil {
+		return err
+	}
+	response := NewApiResponseDetail(200, users)
 	return ctx.JSON(response)
 }

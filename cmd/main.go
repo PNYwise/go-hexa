@@ -3,6 +3,7 @@ package main
 import (
 	"go-hexa/internal"
 	"go-hexa/internal/core/configs"
+	"go-hexa/internal/rest/handlers"
 	"log"
 	"time"
 
@@ -21,7 +22,10 @@ func main() {
 		}
 	}()
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: handlers.ErrorHandler,
+	})
+
 	conf := configs.New()
 
 	port := conf.GetString("app.port")

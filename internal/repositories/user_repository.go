@@ -35,3 +35,11 @@ func (u *userRepository) FindAll(paginationRequest *requests.PaginationRequest) 
 
 	return users, pagination
 }
+
+func (u *userRepository) FindOne(id uint) (*entities.UserEntity, error) {
+	user := new(entities.UserEntity)
+	if err := u.db.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}

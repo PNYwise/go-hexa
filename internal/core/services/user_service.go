@@ -6,6 +6,8 @@ import (
 	"go-hexa/internal/core/domain/models/responses"
 	"go-hexa/internal/core/domain/repositories"
 	"go-hexa/internal/core/domain/services"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type userService struct {
@@ -20,4 +22,12 @@ func NewUserServie(userRepo repositories.IUserRepository) services.IUserService 
 
 func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[]entities.UserEntity, *responses.PaginationResponse) {
 	return u.userRepo.FindAll(paginationRequest)
+}
+
+func (u *userService) FindOne(id uint) (*entities.UserEntity, *fiber.Error) {
+	user, err := u.userRepo.FindOne(id)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusNotFound, "user not found")
+	}
+	return user, nil
 }
