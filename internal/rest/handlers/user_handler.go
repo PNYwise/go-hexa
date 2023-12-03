@@ -31,7 +31,7 @@ func (u *userHandler) InitRouter() {
 func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
 	paginationRequest := &requests.PaginationRequest{}
 	if err := ctx.QueryParser(paginationRequest); err != nil {
-		return err
+		panic(err)
 	}
 	users, pagination := u.userServie.FindAll(paginationRequest)
 	response := NewApiResponseList(200, users, pagination)
@@ -44,7 +44,7 @@ func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
 		ID uint `params:"id"`
 	}{}
 	if err := ctx.ParamsParser(&param); err != nil {
-		return err
+		panic(err)
 	}
 	users, err := u.userServie.FindOne(param.ID)
 	if err != nil {

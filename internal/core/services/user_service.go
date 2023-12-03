@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"go-hexa/internal/core/domain/entities"
 	"go-hexa/internal/core/domain/models/requests"
 	"go-hexa/internal/core/domain/models/responses"
@@ -27,7 +28,7 @@ func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[
 func (u *userService) FindOne(id uint) (*entities.UserEntity, *fiber.Error) {
 	user, err := u.userRepo.FindOne(id)
 	if err != nil {
-		return nil, fiber.NewError(fiber.StatusNotFound, "user not found")
+		return nil, fiber.NewError(fiber.StatusNotFound, fmt.Sprintf("user %d not found", id))
 	}
 	return user, nil
 }
