@@ -34,9 +34,9 @@ func (u *userHandler) InitRouter() {
 // @Tags User
 // @Accept */*
 // @Produce json
-// @Param page query int false "int valid" mininum(1)
-// @Param take query int false "int valid" mininum(1)
-// @Param order query string false "string default" default("DESC")
+// @Param page query int true "int valid" mininum(1)
+// @Param take query int true "int valid" mininum(1)
+// @Param order query string true "string default" default("DESC")
 // @Success 200 {object} handlers.ApiResponseList[[]entities.UserEntity]
 // @Router /users/list [get]
 func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
