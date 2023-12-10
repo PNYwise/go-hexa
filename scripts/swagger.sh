@@ -1,0 +1,1 @@
+swag init -g cmd/main.go --parseDependency --parseInternal --output docs/api

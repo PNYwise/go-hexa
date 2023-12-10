@@ -1,0 +1,136 @@
+basePath: /api
+definitions:
+  go-hexa_internal_core_domain_entities.UserEntity:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      deleted_by:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      role:
+        $ref: '#/definitions/go-hexa_internal_core_domain_enums_role.Enum'
+      status:
+        $ref: '#/definitions/go-hexa_internal_core_domain_enums_status.Enum'
+      updated_at:
+        type: string
+      updated_by:
+        type: integer
+    type: object
+  go-hexa_internal_core_domain_enums_role.Enum:
+    enum:
+    - admin
+    - member
+    type: string
+    x-enum-varnames:
+    - ADMIN
+    - MEMBER
+  go-hexa_internal_core_domain_enums_status.Enum:
+    enum:
+    - active
+    - inactive
+    type: string
+    x-enum-varnames:
+    - ACTIVE
+    - INACTIVE
+  go-hexa_internal_core_domain_models_responses.PaginationResponse:
+    properties:
+      item_count:
+        type: integer
+      page:
+        type: integer
+      page_count:
+        type: integer
+      take:
+        type: integer
+    type: object
+  internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/go-hexa_internal_core_domain_entities.UserEntity'
+      message:
+        type: string
+    type: object
+  internal_rest_handlers.ApiResponseList-array_go-hexa_internal_core_domain_entities_UserEntity:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/go-hexa_internal_core_domain_entities.UserEntity'
+        type: array
+      message:
+        type: string
+      pagination:
+        $ref: '#/definitions/go-hexa_internal_core_domain_models_responses.PaginationResponse'
+    type: object
+host: localhost:8081
+info:
+  contact:
+    email: dinopuguh@gmail.com
+    name: PNYwise
+  description: This is an API for GO-HEXA Application
+  title: GO-HEXA App
+  version: "1.0"
+paths:
+  /users/detail/{id}:
+    get:
+      consumes:
+      - '*/*'
+      description: get user by id.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity'
+      summary: Find One User.
+      tags:
+      - User
+  /users/list:
+    get:
+      consumes:
+      - '*/*'
+      description: get users.
+      parameters:
+      - description: int valid
+        in: query
+        name: page
+        type: integer
+      - description: int valid
+        in: query
+        name: take
+        type: integer
+      - default: '"DESC"'
+        description: string default
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_rest_handlers.ApiResponseList-array_go-hexa_internal_core_domain_entities_UserEntity'
+      summary: Find All User.
+      tags:
+      - User
+swagger: "2.0"
