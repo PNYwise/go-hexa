@@ -43,3 +43,7 @@ func (u *userRepository) FindOne(id uint) (*entities.UserEntity, error) {
 	}
 	return user, nil
 }
+
+func (u *userRepository) Create() {
+
+}
