@@ -1,0 +1,205 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is an API for GO-HEXA Application",
+        "title": "GO-HEXA App",
+        "contact": {
+            "name": "PNYwise",
+            "email": "dinopuguh@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/api",
+    "paths": {
+        "/users/detail/{id}": {
+            "get": {
+                "description": "get user by id.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Find One User.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/list": {
+            "get": {
+                "description": "get users.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Find All User.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "int valid",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "int valid",
+                        "name": "take",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "\"DESC\"",
+                        "description": "string default",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_rest_handlers.ApiResponseList-array_go-hexa_internal_core_domain_entities_UserEntity"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "go-hexa_internal_core_domain_entities.UserEntity": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "integer"
+                },
+                "deleted_by": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/go-hexa_internal_core_domain_enums_role.Enum"
+                },
+                "status": {
+                    "$ref": "#/definitions/go-hexa_internal_core_domain_enums_status.Enum"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "integer"
+                }
+            }
+        },
+        "go-hexa_internal_core_domain_enums_role.Enum": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "member"
+            ],
+            "x-enum-varnames": [
+                "ADMIN",
+                "MEMBER"
+            ]
+        },
+        "go-hexa_internal_core_domain_enums_status.Enum": {
+            "type": "string",
+            "enum": [
+                "active",
+                "inactive"
+            ],
+            "x-enum-varnames": [
+                "ACTIVE",
+                "INACTIVE"
+            ]
+        },
+        "go-hexa_internal_core_domain_models_responses.PaginationResponse": {
+            "type": "object",
+            "properties": {
+                "item_count": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "page_count": {
+                    "type": "integer"
+                },
+                "take": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/go-hexa_internal_core_domain_entities.UserEntity"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_rest_handlers.ApiResponseList-array_go-hexa_internal_core_domain_entities_UserEntity": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/go-hexa_internal_core_domain_entities.UserEntity"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/go-hexa_internal_core_domain_models_responses.PaginationResponse"
+                }
+            }
+        }
+    }
+}

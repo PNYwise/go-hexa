@@ -24,5 +24,4 @@ func New() *viper.Viper {
 }
 
 func App() {
-
 }
