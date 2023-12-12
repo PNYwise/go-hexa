@@ -4,33 +4,19 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type (
-	ErrorResponse struct {
-		Error       bool
-		FailedField string
-		Tag         string
-		Value       interface{}
-	}
+type ErrorResponse struct {
+	FailedField string
+	Tag         string
+	Value       interface{}
+	Error       bool
+}
 
-	XValidator struct {
-		validator *validator.Validate
-	}
-
-	GlobalErrorHandlerResp struct {
-		Success bool   `json:"success"`
-		Message string `json:"message"`
-	}
-)
-
-// This is the validator instance
-// for more information see: https://github.com/go-playground/validator
 var validate = validator.New()
 
-func (v XValidator) Validate(data interface{}) []ErrorResponse {
+func Validate(data interface{}) []ErrorResponse {
 	validationErrors := []ErrorResponse{}
 
-	errs := validate.Struct(data)
-	if errs != nil {
+	if errs := validate.Struct(data); errs != nil {
 		for _, err := range errs.(validator.ValidationErrors) {
 			// In this case data object is actually holding the User struct
 			var elem ErrorResponse

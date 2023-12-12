@@ -41,6 +41,28 @@ definitions:
     x-enum-varnames:
     - ACTIVE
     - INACTIVE
+  go-hexa_internal_core_domain_models_requests.UserRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        minLength: 3
+        type: string
+      password:
+        type: string
+      role:
+        $ref: '#/definitions/go-hexa_internal_core_domain_enums_role.Enum'
+      status:
+        $ref: '#/definitions/go-hexa_internal_core_domain_enums_status.Enum'
+    required:
+    - email
+    - name
+    - password
+    - role
+    - status
+    type: object
   go-hexa_internal_core_domain_models_responses.PaginationResponse:
     properties:
       item_count:
@@ -83,6 +105,28 @@ info:
   title: GO-HEXA App
   version: "1.0"
 paths:
+  /users/create:
+    post:
+      consumes:
+      - Application/Json
+      description: cteate user.
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/go-hexa_internal_core_domain_models_requests.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity'
+      summary: Create User.
+      tags:
+      - User
   /users/detail/{id}:
     get:
       consumes:
@@ -113,15 +157,18 @@ paths:
       - description: int valid
         in: query
         name: page
+        required: true
         type: integer
       - description: int valid
         in: query
         name: take
+        required: true
         type: integer
       - default: '"DESC"'
         description: string default
         in: query
         name: order
+        required: true
         type: string
       produces:
       - application/json

@@ -27,6 +27,7 @@ func (u *userHandler) InitRouter() {
 	api := u.app.Group("api/users")
 	api.Get("list", u.FindAll)
 	api.Get("detail/:id", u.FindOne)
+	api.Post("create", u.Create)
 }
 
 // @Summary Find All User.
@@ -67,8 +68,31 @@ func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
 	}
 	users, err := u.userServie.FindOne(param.ID)
 	if err != nil {
-		return err
+		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 	response := NewApiResponseDetail[*entities.UserEntity](200, users)
+	return ctx.JSON(response)
+}
+
+// @Summary Create User.
+// @Description cteate user.
+// @Tags User
+// @Accept Application/Json
+// @Produce json
+// @Param request body requests.UserRequest true "body"
+// @Success 200 {object} handlers.ApiResponseDetail[entities.UserEntity]
+// @Router /users/create [post]
+func (u *userHandler) Create(ctx *fiber.Ctx) error {
+	request := &requests.UserRequest{}
+	if err := ctx.BodyParser(&request); err != nil {
+		panic(err)
+	}
+	user, err := u.userServie.Create(request)
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	// Validation
+
+	response := NewApiResponseDetail[*entities.UserEntity](200, user)
 	return ctx.JSON(response)
 }
