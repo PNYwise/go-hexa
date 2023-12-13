@@ -18,6 +18,40 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/users/create": {
+            "post": {
+                "description": "create user.",
+                "consumes": [
+                    "Application/Json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Create User.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/go-hexa_internal_core_domain_models_requests.UserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity"
+                        }
+                    }
+                }
+            }
+        },
         "/users/detail/{id}": {
             "get": {
                 "description": "get user by id.",
@@ -68,20 +102,23 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "int valid",
                         "name": "page",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "integer",
                         "description": "int valid",
                         "name": "take",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "default": "\"DESC\"",
                         "description": "string default",
                         "name": "order",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -155,6 +192,37 @@ const docTemplate = `{
                 "ACTIVE",
                 "INACTIVE"
             ]
+        },
+        "go-hexa_internal_core_domain_models_requests.UserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "role",
+                "status"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 3
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/go-hexa_internal_core_domain_enums_role.Enum"
+                },
+                "status": {
+                    "$ref": "#/definitions/go-hexa_internal_core_domain_enums_status.Enum"
+                }
+            }
         },
         "go-hexa_internal_core_domain_models_responses.PaginationResponse": {
             "type": "object",
