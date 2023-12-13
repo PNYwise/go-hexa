@@ -75,12 +75,12 @@ func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
 }
 
 // @Summary Create User.
-// @Description cteate user.
+// @Description create user.
 // @Tags User
 // @Accept Application/Json
 // @Produce json
 // @Param request body requests.UserRequest true "body"
-// @Success 200 {object} handlers.ApiResponseDetail[entities.UserEntity]
+// @Success 201 {object} handlers.ApiResponseDetail[entities.UserEntity]
 // @Router /users/create [post]
 func (u *userHandler) Create(ctx *fiber.Ctx) error {
 	request := &requests.UserRequest{}
@@ -92,7 +92,6 @@ func (u *userHandler) Create(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 	// Validation
-
-	response := NewApiResponseDetail[*entities.UserEntity](200, user)
-	return ctx.JSON(response)
+	response := NewApiResponseDetail[*entities.UserEntity](201, user)
+	return ctx.Status(201).JSON(response)
 }

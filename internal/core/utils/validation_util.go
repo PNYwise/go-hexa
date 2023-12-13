@@ -1,6 +1,10 @@
 package utils
 
 import (
+	"errors"
+	"fmt"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -31,4 +35,17 @@ func Validate(data interface{}) []ErrorResponse {
 	}
 
 	return validationErrors
+}
+
+func ValidationErrMsg(errs []ErrorResponse) error {
+	errMsgs := make([]string, 0)
+	for _, err := range errs {
+		errMsgs = append(errMsgs, fmt.Sprintf(
+			"[%s]: '%v' | Needs to implement '%s'",
+			err.FailedField,
+			err.Value,
+			err.Tag,
+		))
+	}
+	return errors.New(strings.Join(errMsgs, " and "))
 }

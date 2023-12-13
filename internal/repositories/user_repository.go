@@ -38,12 +38,38 @@ func (u *userRepository) FindAll(paginationRequest *requests.PaginationRequest) 
 
 func (u *userRepository) FindOne(id uint) (*entities.UserEntity, error) {
 	user := new(entities.UserEntity)
-	if err := u.db.First(&user, id).Error; err != nil {
+	if err := u.db.Select(
+		"id",
+		"name",
+		"email",
+		"password",
+		"status",
+		"role",
+	).First(&user, id).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (u *userRepository) Create() {
+func (u *userRepository) FindOneByEmail(email string) (*entities.UserEntity, error) {
+	user := new(entities.UserEntity)
+	if err := u.db.Select(
+		"id",
+		"email",
+		"password",
+	).Where(&entities.UserEntity{Email: email}).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}
 
+func (u *userRepository) Create(user *entities.UserEntity) (*entities.UserEntity, error) {
+	err := u.db.Transaction(func(tx *gorm.DB) error {
+		tx.Create(&user)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

@@ -9,7 +9,7 @@ const (
 	MEMBER Enum = "member"
 )
 
-func ValidateRole(role Enum) error {
+func Validate(role Enum) error {
 	switch role {
 	case ADMIN, MEMBER:
 		return nil // Valid role

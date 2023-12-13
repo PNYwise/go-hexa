@@ -20,7 +20,7 @@ const docTemplate = `{
     "paths": {
         "/users/create": {
             "post": {
-                "description": "cteate user.",
+                "description": "create user.",
                 "consumes": [
                     "Application/Json"
                 ],
@@ -43,8 +43,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/internal_rest_handlers.ApiResponseDetail-go-hexa_internal_core_domain_entities_UserEntity"
                         }

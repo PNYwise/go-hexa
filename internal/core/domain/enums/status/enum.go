@@ -9,7 +9,7 @@ const (
 	INACTIVE Enum = "inactive"
 )
 
-func ValidateStatus(status Enum) error {
+func Validate(status Enum) error {
 	switch status {
 	case ACTIVE, INACTIVE:
 		return nil // Valid status

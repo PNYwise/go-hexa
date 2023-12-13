@@ -1,15 +1,15 @@
 package services
 
 import (
-	"errors"
 	"fmt"
 	"go-hexa/internal/core/domain/entities"
+	"go-hexa/internal/core/domain/enums/role"
+	"go-hexa/internal/core/domain/enums/status"
 	"go-hexa/internal/core/domain/models/requests"
 	"go-hexa/internal/core/domain/models/responses"
 	"go-hexa/internal/core/domain/repositories"
 	"go-hexa/internal/core/domain/services"
 	"go-hexa/internal/core/utils"
-	"strings"
 )
 
 type userService struct {
@@ -35,21 +35,40 @@ func (u *userService) FindOne(id uint) (*entities.UserEntity, error) {
 }
 
 // Create implements services.IUserService.
-func (*userService) Create(request *requests.UserRequest) (*entities.UserEntity, error) {
+func (u *userService) Create(request *requests.UserRequest) (*entities.UserEntity, error) {
 	// Validation
 	if errs := utils.Validate(request); len(errs) > 0 && errs[0].Error {
-		errMsgs := make([]string, 0)
-
-		for _, err := range errs {
-			errMsgs = append(errMsgs, fmt.Sprintf(
-				"[%s]: '%v' | Needs to implement '%s'",
-				err.FailedField,
-				err.Value,
-				err.Tag,
-			))
-		}
-
-		return nil, errors.New(strings.Join(errMsgs, " and "))
+		return nil, utils.ValidationErrMsg(errs)
 	}
-	return nil, nil
+	userEmail, _ := u.userRepo.FindOneByEmail(request.Email)
+	if userEmail != nil {
+		return nil, utils.ValidationErrMsg(
+			[]utils.ErrorResponse{{FailedField: "email", Value: request.Email, Tag: "unique", Error: true}},
+		)
+	}
+
+	//validateRole
+	if err := role.Validate(request.Role); err != nil {
+		return nil, utils.ValidationErrMsg(
+			[]utils.ErrorResponse{{FailedField: "role", Value: request.Role, Tag: "Valid", Error: true}},
+		)
+	}
+
+	//validateStatus
+	if err := status.Validate(request.Status); err != nil {
+		return nil, utils.ValidationErrMsg(
+			[]utils.ErrorResponse{{FailedField: "status", Value: request.Status, Tag: "Valid", Error: true}},
+		)
+	}
+
+	user := &entities.UserEntity{
+		Name:     request.Name,
+		Email:    request.Email,
+		Password: request.Password,
+		Address:  request.Address,
+		Status:   request.Status,
+		Role:     request.Role,
+	}
+	u.userRepo.Create(user)
+	return user, nil
 }
