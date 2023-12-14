@@ -22,20 +22,27 @@ func NewUserServie(userRepo repositories.IUserRepository) services.IUserService 
 	}
 }
 
-func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[]entities.UserEntity, *responses.PaginationResponse) {
-	return u.userRepo.FindAll(paginationRequest)
+func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[]responses.UserResponse, *responses.PaginationResponse) {
+	users, pagination := u.userRepo.FindAll(paginationRequest)
+	var userResponse []responses.UserResponse
+
+	for _, v := range *users {
+		userResponse = append(userResponse, *newUserResponse(&v))
+	}
+
+	return &userResponse, pagination
 }
 
-func (u *userService) FindOne(id uint) (*entities.UserEntity, error) {
+func (u *userService) FindOne(id uint) (*responses.UserResponse, error) {
 	user, err := u.userRepo.FindOne(id)
 	if err != nil {
 		return nil, fmt.Errorf("user %d not found", id)
 	}
-	return user, nil
+	return newUserResponse(user), nil
 }
 
 // Create implements services.IUserService.
-func (u *userService) Create(request *requests.UserRequest) (*entities.UserEntity, error) {
+func (u *userService) Create(request *requests.UserRequest) (*responses.UserResponse, error) {
 	// Validation
 	if errs := utils.Validate(request); len(errs) > 0 && errs[0].Error {
 		return nil, utils.ValidationErrMsg(errs)
@@ -70,5 +77,16 @@ func (u *userService) Create(request *requests.UserRequest) (*entities.UserEntit
 		Role:     request.Role,
 	}
 	u.userRepo.Create(user)
-	return user, nil
+	return newUserResponse(user), nil
+}
+
+func newUserResponse(user *entities.UserEntity) *responses.UserResponse {
+	return &responses.UserResponse{
+		ID:      user.ID,
+		Name:    user.Name,
+		Email:   user.Email,
+		Address: user.Address,
+		Status:  user.Status,
+		Role:    user.Role,
+	}
 }
