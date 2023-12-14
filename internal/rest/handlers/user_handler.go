@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"go-hexa/internal/core/domain/entities"
 	"go-hexa/internal/core/domain/models/requests"
+	"go-hexa/internal/core/domain/models/responses"
 	"go-hexa/internal/core/domain/services"
 
 	"github.com/gofiber/fiber/v2"
@@ -38,7 +38,7 @@ func (u *userHandler) InitRouter() {
 // @Param page query int true "int valid" mininum(1)
 // @Param take query int true "int valid" mininum(1)
 // @Param order query string true "string default" default("DESC")
-// @Success 200 {object} handlers.ApiResponseList[[]entities.UserEntity]
+// @Success 200 {object} handlers.ApiResponseList[[]responses.UserResponse]
 // @Router /users/list [get]
 func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
 	paginationRequest := &requests.PaginationRequest{}
@@ -46,7 +46,7 @@ func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
 		panic(err)
 	}
 	users, pagination := u.userServie.FindAll(paginationRequest)
-	response := NewApiResponseList[*[]entities.UserEntity](200, users, pagination)
+	response := NewApiResponseList[*[]responses.UserResponse](200, users, pagination)
 
 	return ctx.JSON(response)
 }
@@ -57,7 +57,7 @@ func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
 // @Accept */*
 // @Produce json
 // @Param id path int true "User ID"
-// @Success 200 {object} handlers.ApiResponseDetail[entities.UserEntity]
+// @Success 200 {object} handlers.ApiResponseDetail[responses.UserResponse]
 // @Router /users/detail/{id} [get]
 func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
 	param := struct {
@@ -70,7 +70,7 @@ func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
-	response := NewApiResponseDetail[*entities.UserEntity](200, users)
+	response := NewApiResponseDetail[*responses.UserResponse](200, users)
 	return ctx.JSON(response)
 }
 
@@ -80,7 +80,7 @@ func (u *userHandler) FindOne(ctx *fiber.Ctx) error {
 // @Accept Application/Json
 // @Produce json
 // @Param request body requests.UserRequest true "body"
-// @Success 201 {object} handlers.ApiResponseDetail[entities.UserEntity]
+// @Success 201 {object} handlers.ApiResponseDetail[responses.UserResponse]
 // @Router /users/create [post]
 func (u *userHandler) Create(ctx *fiber.Ctx) error {
 	request := &requests.UserRequest{}
@@ -92,6 +92,6 @@ func (u *userHandler) Create(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 	// Validation
-	response := NewApiResponseDetail[*entities.UserEntity](201, user)
+	response := NewApiResponseDetail[*responses.UserResponse](201, user)
 	return ctx.Status(201).JSON(response)
 }

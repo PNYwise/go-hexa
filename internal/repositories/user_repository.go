@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"go-hexa/internal/core/domain/entities"
 	"go-hexa/internal/core/domain/models/requests"
 	"go-hexa/internal/core/domain/models/responses"
@@ -29,7 +30,9 @@ func (u *userRepository) FindAll(paginationRequest *requests.PaginationRequest) 
 	pagination := utils.GeneratePagination(paginationRequest, count)
 
 	users := new([]entities.UserEntity)
-	if err := u.db.Offset(paginationRequest.Skip()).Limit(paginationRequest.Take).Find(&users).Error; err != nil {
+	selects := []string{"id", "name", "email", "password", "status", "role"}
+	order := fmt.Sprintf("id %s", paginationRequest.Order)
+	if err := u.db.Offset(paginationRequest.Skip()).Limit(paginationRequest.Take).Order(order).Select(selects).Find(&users).Error; err != nil {
 		panic(err)
 	}
 
@@ -38,14 +41,8 @@ func (u *userRepository) FindAll(paginationRequest *requests.PaginationRequest) 
 
 func (u *userRepository) FindOne(id uint) (*entities.UserEntity, error) {
 	user := new(entities.UserEntity)
-	if err := u.db.Select(
-		"id",
-		"name",
-		"email",
-		"password",
-		"status",
-		"role",
-	).First(&user, id).Error; err != nil {
+	selects := []string{"id", "name", "email", "password", "status", "role"}
+	if err := u.db.Select(selects).First(&user, id).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -53,11 +50,8 @@ func (u *userRepository) FindOne(id uint) (*entities.UserEntity, error) {
 
 func (u *userRepository) FindOneByEmail(email string) (*entities.UserEntity, error) {
 	user := new(entities.UserEntity)
-	if err := u.db.Select(
-		"id",
-		"email",
-		"password",
-	).Where(&entities.UserEntity{Email: email}).First(&user).Error; err != nil {
+	selects := []string{"id", "email", "password"}
+	if err := u.db.Select(selects).Where(&entities.UserEntity{Email: email}).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
