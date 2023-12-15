@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package go_hexa;
+
+
+enum Order {
+    ASC = 0;
+    DESC = 1;
+}
+
+enum Status {
+    ACTIVE = 0;
+    INACTIVE= 1;
+}
+enum Role {
+    ADMIN = 0;
+    USER = 1;
+}
+
+message PaginationRequest {
+    int64 skip = 1;
+    int64 take = 2;
+    Order order = 3;
+}
+
+message FindOneRequest {
+    uint32 user_id = 1;
+}
+
+message UserResponse {
+    uint32 id = 1;
+    string name = 2;
+    string email = 3;
+    string address = 4;
+    Status status = 5;
+    Role role = 6;
+}
+
+message UserResponses{
+    repeated UserResponse usersResponse = 1;
+}
+
+service UserService {
+    rpc FindAll (PaginationRequest) returns (UserResponses);
+    rpc FindOne (FindOneRequest) returns (UserResponse);
+}
+
