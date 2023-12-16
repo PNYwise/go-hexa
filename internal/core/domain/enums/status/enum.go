@@ -1,6 +1,8 @@
 package status
 
-import "errors"
+import (
+	"errors"
+)
 
 type Enum string
 
