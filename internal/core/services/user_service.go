@@ -22,7 +22,11 @@ func NewUserServie(userRepo repositories.IUserRepository) services.IUserService 
 	}
 }
 
-func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[]responses.UserResponse, *responses.PaginationResponse) {
+
+func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[]responses.UserResponse, *responses.PaginationResponse, error) {
+	if errs := utils.Validate(paginationRequest); len(errs) > 0 && errs[0].Error {
+		return nil, nil, utils.ValidationErrMsg(errs)
+	}
 	users, pagination := u.userRepo.FindAll(paginationRequest)
 	var userResponse []responses.UserResponse
 
@@ -30,7 +34,7 @@ func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[
 		userResponse = append(userResponse, *newUserResponse(&v))
 	}
 
-	return &userResponse, pagination
+	return &userResponse, pagination, nil
 }
 
 func (u *userService) FindOne(id uint) (*responses.UserResponse, error) {

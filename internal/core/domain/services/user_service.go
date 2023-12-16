@@ -6,7 +6,7 @@ import (
 )
 
 type IUserService interface {
-	FindAll(paginationRequest *requests.PaginationRequest) (*[]responses.UserResponse, *responses.PaginationResponse)
+	FindAll(paginationRequest *requests.PaginationRequest) (*[]responses.UserResponse, *responses.PaginationResponse, error)
 	FindOne(id uint) (*responses.UserResponse, error)
 	Create(request *requests.UserRequest) (*responses.UserResponse, error)
 }
