@@ -1,1 +1,1 @@
-APP_ENV=development nodemon --exec go run ./cmd/main.go --signal SIGTERM
+APP_ENV=development nodemon --exec go run ./cmd/grpc/main.go --signal SIGTERM
