@@ -22,6 +22,7 @@ func NewUserServie(userRepo repositories.IUserRepository) services.IUserService 
 	}
 }
 
+
 func (u *userService) FindAll(paginationRequest *requests.PaginationRequest) (*[]responses.UserResponse, *responses.PaginationResponse, error) {
 	if errs := utils.Validate(paginationRequest); len(errs) > 0 && errs[0].Error {
 		return nil, nil, utils.ValidationErrMsg(errs)

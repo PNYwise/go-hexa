@@ -18,6 +18,7 @@ message PaginationRequest {
 message FindOneRequest {
     uint32 user_id = 1;
 }
+
 message PaginationResponse{ 
     int64 page = 1;
     int64 take = 2;

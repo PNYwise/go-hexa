@@ -246,7 +246,6 @@ func (x *PaginationResponse) GetPageCount() int64 {
 	}
 	return 0
 }
-
 type UserResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
