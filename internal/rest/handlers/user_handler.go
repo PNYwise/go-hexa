@@ -45,7 +45,10 @@ func (u *userHandler) FindAll(ctx *fiber.Ctx) error {
 	if err := ctx.QueryParser(paginationRequest); err != nil {
 		panic(err)
 	}
-	users, pagination := u.userServie.FindAll(paginationRequest)
+	users, pagination, err := u.userServie.FindAll(paginationRequest)
+	if err != nil {
+		return err
+	}
 	response := NewApiResponseList[*[]responses.UserResponse](200, users, pagination)
 
 	return ctx.JSON(response)

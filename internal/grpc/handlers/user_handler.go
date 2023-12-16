@@ -27,7 +27,10 @@ func (u *userHandler) FindAll(ctx context.Context, request *proto.PaginationRequ
 		Take:  int(request.GetTake()),
 		Order: order.Enum(request.GetOrder().String()),
 	}
-	users, _ := u.userServie.FindAll(paginationRequest)
+	users, pagination, err := u.userServie.FindAll(paginationRequest)
+	if err != nil {
+		return nil, err
+	}
 	protoResponses := make([]*proto.UserResponse, len(*users))
 
 	for i, resp := range *users {
@@ -43,7 +46,13 @@ func (u *userHandler) FindAll(ctx context.Context, request *proto.PaginationRequ
 	}
 
 	responses := &proto.UserResponses{
-		UsersResponse: protoResponses,
+		Data: protoResponses,
+		Pagination: &proto.PaginationResponse{
+			Page:      int64(pagination.Page),
+			Take:      int64(pagination.Take),
+			ItemCount: pagination.ItemCount,
+			PageCount: int64(pagination.PageCount),
+		},
 	}
 	return responses, nil
 }

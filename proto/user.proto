@@ -18,7 +18,12 @@ message PaginationRequest {
 message FindOneRequest {
     uint32 user_id = 1;
 }
-
+message PaginationResponse{ 
+    int64 page = 1;
+    int64 take = 2;
+	int64 itemCount =3 ;
+	int64 pageCount   = 4;
+}
 message UserResponse {
     uint32 id = 1;
     string name = 2;
@@ -29,7 +34,8 @@ message UserResponse {
 }
 
 message UserResponses{
-    repeated UserResponse usersResponse = 1;
+    repeated UserResponse  data = 1;
+    PaginationResponse pagination = 2;
 }
 
 service User {
