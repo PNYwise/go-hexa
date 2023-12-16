@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-package go_hexa;
+package users;
 
+option go_package = "go-hexa/proto";
 
 enum Order {
     ASC = 0;
